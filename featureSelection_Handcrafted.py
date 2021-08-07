@@ -5,7 +5,7 @@ from sklearn import svm
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import KFold
-from sklearn.metrics import classification_report, accuracy_score, plot_roc_curve
+from sklearn.metrics import classification_report, accuracy_score, plot_roc_curve, roc_auc_score
 
 
 
@@ -104,33 +104,34 @@ def getResults():
             features = sc.transform(selectedHandFeatures)
 
             clf = svm.SVC(kernel='linear', C=1)
-            #
             handcraftedScores = cross_val_score(clf, features, massType, cv=10)
             print("handcrafted average using:", m, "training instances is:", handcraftedScores.mean())
 
-            # modelHandcrafted = svm.SVC(kernel='linear', C=1)
-            # handcraftedROCAUC = []
-            # count = 0
-            #
-            # cv = KFold(n_splits=10, random_state=1, shuffle=True)
-            # for train_index, test_index in cv.split(features):
-            #     x_train = features[train_index]
-            #     x_test = features[test_index]
-            #     y_train = massType.loc[train_index]
-            #     y_test = massType.loc[test_index]
-            #
-            #     modelHandcrafted.fit(x_train, y_train)
-            #     viz = plot_roc_curve(modelHandcrafted, x_test, y_test, name='ROC fold {}'.format(i),
-            #                          alpha=0.3, lw=1)
-            #     handcraftedROCAUC.append(viz.roc_auc)
-            #
-            # average = 0
-            # for score in handcraftedROCAUC:
-            #     average += score
-            #
-            # average = average / len(handcraftedROCAUC)
+            model = svm.SVC(kernel='linear', C=1, probability=True)
+            accuracyScores = []
+            count = 0
+            cv = KFold(n_splits=10, random_state=1, shuffle=True)
+            for train_index, test_index in cv.split(features):
+                x_train = features[train_index]
+                x_test = features[test_index]
+                y_train = massType.loc[train_index]
+                y_test = massType.loc[test_index]
+
+                model.fit(x_train, y_train)
+                predictions = model.predict(x_test)
+                accuracy = accuracy_score(y_test, predictions)
+                accuracyScores.append(accuracy)
+
+            averageAccuracy = 0
+            for score in accuracyScores:
+                averageAccuracy += score
+
+            averageAccuracy = averageAccuracy / len(accuracyScores)
             #print("The average ROC AUC using:", m, "random training instances is:", average)
-            result = [m_, num, handcraftedScores.mean()]
-            print("printing results")
-            print(result)
+            result = [m_, num, handcraftedScores.mean(), averageAccuracy]
             results.append(result)
+
+    return  results
+
+
+r = getResults()
