@@ -14,9 +14,9 @@ from sklearn.metrics import classification_report, accuracy_score, plot_roc_curv
 # handcraftedFeat = sc.transform(handcraftedFeat)
 
 def euclideanDistance(vector1, vector2):
-    d = 0
-    for i in range(len(vector1)):
-        d += (vector1[i] - vector2[i])**2
+    d = ((vector1 - vector2)**2).sum()
+    # for i in range(len(vector1)):
+    #     d += (vector1[i] - vector2[i])**2
     return np.sqrt(d)
 
 def getNearest(featuresDF, index):
