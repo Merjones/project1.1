@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import os
 import PIL
-import cv2
+
 
 # def getPatch(xMax, yMax, x_cent, y_cent):
 #     top = y_cent - 112

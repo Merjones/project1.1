@@ -32,7 +32,7 @@ def getResults():
                                                     'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9',
                                                     'Unnamed: 10'])
     massCenterMarks['Mass Type'] = massCenterMarks['Mass Type'].map(
-        {1: 1, 2: 1, 3: 3, 5: 3})  # mapping all malignancies to a 1 and all benign to a 3
+        {1: 1, 2: 1, 3: -1, 5: -1})  # mapping all malignancies to a 1 and all benign to a -1
     massType = massCenterMarks['Mass Type']
 
     ###############

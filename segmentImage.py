@@ -2,9 +2,9 @@ import openImage
 import numpy as np
 import matplotlib.pyplot as plt
 
-imageFilePath = "C:\\Users\jones\Desktop\MammData\FFDM_CCOnly\ARP0001_0701_LCC.img"
+# imageFilePath = "C:\\Users\jones\Desktop\MammData\FFDM_CCOnly\ARP0001_0701_LCC.img"
 #
-imgRaw = openImage.load_image(imageFilePath)
+# imgRaw = openImage.load_image(imageFilePath)
 
 def segment(filePath, image):
 
