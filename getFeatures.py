@@ -95,11 +95,11 @@ def features(dataFile, imagePath):
         # plt.show()
 
         ###get the handcrafted features
-        # print("getting handcrafted")
-        # handcrafted_features = handcraftedFeatures.getFeatures(img)
+        print("getting handcrafted")
+        handcrafted_features = handcraftedFeatures.getFeatures(img)
         # ## create a row that has the features and then class label as the last entry
         # # handcrafted_features.append(massType)
-        # handcraftedFeaturesDF.loc[len(handcraftedFeaturesDF)] = handcrafted_features
+        handcraftedFeaturesDF.loc[len(handcraftedFeaturesDF)] = handcrafted_features
 
         ###get the automated features
         print("getting automated")
@@ -112,8 +112,7 @@ def features(dataFile, imagePath):
     # automatedFeaturesDF.to_pickle("allAutomatedFeatures.pkl")
     # handcraftedFeaturesDF.to_pickle("allHandcraftedFeatures.pkl")
 
-    #return handcraftedFeaturesDF, automatedFeaturesDF
-    return automatedFeaturesDF
+    return handcraftedFeaturesDF, automatedFeaturesDF
 
 #
 # name = 'ARP0007_0901_RCC.img'

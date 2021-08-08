@@ -7,7 +7,7 @@ from sklearn.preprocessing import StandardScaler
 # handcraftedFeat = pd.read_pickle("allHandcraftedFeatures.pkl")
 # automatedFeat   = pd.read_pickle("allAutomatedFeatures.pkl")
 #
-def reduceFeatures(featureDF):
+def standardize(featureDF):
     # independentVarLength = (len(featureDF.columns) - 1)
     # x = featureDF.iloc[:, :independentVarLength]
     # y = featureDF.iloc[:, independentVarLength]

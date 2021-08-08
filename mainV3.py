@@ -4,13 +4,10 @@ import os
 import getFeatures
 import preprocess
 import matplotlib.pyplot as plt
-from scipy import interpolate
 from sklearn import svm
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import KFold
-from sklearn.metrics import classification_report, accuracy_score, plot_roc_curve, roc_curve, auc, roc_auc_score
-
-
+from sklearn.metrics import classification_report, accuracy_score, roc_auc_score, auc, roc_curve
 
 def getAverage(scoresList):
     score = 0
@@ -25,30 +22,28 @@ massCenterMarks = pd.read_excel('onlyCC.xlsx')
 massCenterMarks = massCenterMarks.drop(columns=['Unnamed: 0','Unnamed: 5', 'Unnamed: 6',
                                                 'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9',
                                                 'Unnamed: 10'])
-massCenterMarks['Mass Type'] = massCenterMarks['Mass Type'].map({1:1, 2:1, 3:-1, 5:-1}) #mapping all malignancies to a 1 and all benign to a -1
+#mapping all malignancies to a 1 and all benign to a -1
+massCenterMarks['Mass Type'] = massCenterMarks['Mass Type'].map({1:1, 2:1, 3:-1, 5:-1})
+massType = massCenterMarks['Mass Type']
 
 ###STEP 2
 #get the features
-#handcraftedFeat, automatedFeat =  getFeatures.features(massCenterMarks, imageFolderPath)
-handcraftedFeat = pd.read_pickle("allHandcraftedFeatures.pkl")
-automatedFeat   = pd.read_pickle("automatedFeatIncludingFC.pkl")
-mergedFeat = pd.concat([handcraftedFeat, automatedFeat], axis=1)
+handcrafted_features, automated_features = getFeatures.features(massCenterMarks,imageFolderPath)
+merged_features = pd.concat([handcrafted_features,automated_features], axis=1)
+
+##STEP 3
+## preprocess
+handFeatures = preprocess.standardize(handcrafted_features)
+autoFeatures = preprocess.standardize(automated_features)
+mergedFeatures = preprocess.standardize(merged_features)
 
 
-###STEP 3
-# preprocess
-x_handcrafted = preprocess.reduceFeatures(handcraftedFeat)
-x_automated   = preprocess.reduceFeatures(automatedFeat)
-x_merged      = preprocess.reduceFeatures(mergedFeat)
-massType = massCenterMarks['Mass Type']
+DATA = [handFeatures,autoFeatures,mergedFeatures]
 
-
-DATA = [ x_handcrafted, x_automated, x_merged]
-# = [x_automated, x_merged]
 cv = KFold(n_splits=10,random_state=1, shuffle=True)
-
 results = pd.DataFrame(columns=(list(range(0, 11))))
 results.columns = [*results.columns[:-1], 'Average']
+
 
 for d in DATA:
     print(d)
@@ -70,10 +65,9 @@ for d in DATA:
         fpr , tpr, _ = roc_curve(y_test,predictions)
         aucH = auc(fpr,tpr)
         AUCscores.append(aucH)
-        print("aucH using metrics.auc is:", aucH)
         rocAUC = roc_auc_score(y_test, model.predict_proba(x_test)[:,1])
         ROCAUCScores.append(rocAUC)
-        print("roc auc is:", rocAUC)
+        print("Accuracy:", accuracy,"AUC:", aucH, "ROC AUC:",rocAUC)
 
     avgAccuracy = getAverage(accuracyScores)
     avgAUC      = getAverage(AUCscores)
@@ -85,11 +79,3 @@ for d in DATA:
     results.loc[len(results)] = accuracyScores
     results.loc[len(results)] = AUCscores
     results.loc[len(results)] = ROCAUCScores
-
-
-
-
-
-results.to_excel("hand-autoFC-merged-FC-noreduction.xlsx")
-
-
