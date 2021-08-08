@@ -35,28 +35,28 @@ def getResults():
         {1: 1, 2: 1, 3: -1, 5: -1})  # mapping all malignancies to a 1 and all benign to a -1
     massType = massCenterMarks['Mass Type']
 
-    ###############
-    # automatedFeat_ = pd.read_pickle("allAutomatedFeatures.pkl")
-    #
-    # #normalize all features by dividing by the mean in order to compare their variances
-    # #normalizedAutoFeat = automatedFeat_ / automatedFeat_.mean()
-    # sc = StandardScaler()
-    # sc.fit(automatedFeat_)
-    # automatedFeat_= sc.transform(automatedFeat_)
-    #
-    # varianceSelector = VarianceThreshold(1)
-    # autoFeat = varianceSelector.fit_transform(automatedFeat_)
-    #
-    # ##turn back into pandas dataframe
-    # automatedFeat = pd.DataFrame(autoFeat)
-    #
-    # ##drop all columns that have less than 20 unique values
-    # count = 0
-    # for col in automatedFeat.columns:
-    #     if ((automatedFeat[col].nunique()) < 20):
-    #         automatedFeat.drop(col, inplace=True, axis=1)
-    #         count+=1
-    # print("Dropping this many colums:", count)
+    ##############
+    automatedFeat_ = pd.read_pickle("allAutomatedFeatures.pkl")
+
+    #normalize all features by dividing by the mean in order to compare their variances
+    #normalizedAutoFeat = automatedFeat_ / automatedFeat_.mean()
+    sc = StandardScaler()
+    sc.fit(automatedFeat_)
+    automatedFeat_= sc.transform(automatedFeat_)
+
+    varianceSelector = VarianceThreshold(0)
+    autoFeat = varianceSelector.fit_transform(automatedFeat_)
+
+    ##turn back into pandas dataframe
+    automatedFeat = pd.DataFrame(autoFeat)
+
+    ##drop all columns that have less than 20 unique values
+    count = 0
+    for col in automatedFeat.columns:
+        if ((automatedFeat[col].nunique()) < 20):
+            automatedFeat.drop(col, inplace=True, axis=1)
+            count+=1
+    print("Dropping this many colums:", count)
 
     automatedFeat = pd.read_pickle('allAutomatedFeatures_REDUCED.pkl')
     n = automatedFeat.shape[0]  # number of training instances

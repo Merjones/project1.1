@@ -16,14 +16,17 @@ massCenterMarks = pd.read_excel('onlyCC.xlsx')
 massCenterMarks = massCenterMarks.drop(columns=['Unnamed: 0','Unnamed: 5', 'Unnamed: 6',
                                                 'Unnamed: 7', 'Unnamed: 8', 'Unnamed: 9',
                                                 'Unnamed: 10'])
-massCenterMarks['Mass Type'] = massCenterMarks['Mass Type'].map({1:1, 2:1, 3:3, 5:3}) #mapping all malignancies to a 1 and all benign to a 3
+massCenterMarks['Mass Type'] = massCenterMarks['Mass Type'].map({1:1, 2:1, 3:-1, 5:-1}) #mapping all malignancies to a 1 and all benign to a 3
 
 ###STEP 2
 #get the features
 #handcraftedFeat, automatedFeat =  getFeatures.features(massCenterMarks, imageFolderPath)
-handcraftedFeat = pd.read_pickle("allHandcraftedFeatures.pkl")
-automatedFeat   = pd.read_pickle("allAutomatedFeatures.pkl")
-mergedFeat = pd.concat([handcraftedFeat, automatedFeat], axis=1)
+automatedFeat =  getFeatures.features(massCenterMarks, imageFolderPath)
+automatedFeat.to_pickle("automatedFeatIncludingFC.pkl")
+_print("pause")
+# handcraftedFeat = pd.read_pickle("allHandcraftedFeatures.pkl")
+# automatedFeat   = pd.read_pickle("allAutomatedFeatures_REDUCED.pkl")
+# mergedFeat = pd.concat([handcraftedFeat, automatedFeat], axis=1)
 
 ###STEP 3
 # preprocess

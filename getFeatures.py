@@ -69,7 +69,7 @@ def features(dataFile, imagePath):
     #handcraftedFeaturesDF.columns = [*handcraftedFeaturesDF.columns[:-1], 'ClassLabel']
 
     automatedFeaturesDF = pd.DataFrame(
-        columns=(list(range(0, 25088))))  ##7x7x512 different handcrafted features plus the class label
+        columns=(list(range(0, 1000))))  ##7x7x512 different handcrafted features plus the class label
     #automatedFeaturesDF.columns = [*automatedFeaturesDF.columns[:-1], 'ClassLabel']
 
     for index ,row in dataFile.iterrows():
@@ -95,11 +95,11 @@ def features(dataFile, imagePath):
         # plt.show()
 
         ###get the handcrafted features
-        print("getting handcrafted")
-        handcrafted_features = handcraftedFeatures.getFeatures(img)
-        ## create a row that has the features and then class label as the last entry
-        # handcrafted_features.append(massType)
-        handcraftedFeaturesDF.loc[len(handcraftedFeaturesDF)] = handcrafted_features
+        # print("getting handcrafted")
+        # handcrafted_features = handcraftedFeatures.getFeatures(img)
+        # ## create a row that has the features and then class label as the last entry
+        # # handcrafted_features.append(massType)
+        # handcraftedFeaturesDF.loc[len(handcraftedFeaturesDF)] = handcrafted_features
 
         ###get the automated features
         print("getting automated")
@@ -109,10 +109,11 @@ def features(dataFile, imagePath):
         print("got both")
 
     ##dump into a pickle
-    automatedFeaturesDF.to_pickle("allAutomatedFeatures.pkl")
-    handcraftedFeaturesDF.to_pickle("allHandcraftedFeatures.pkl")
+    # automatedFeaturesDF.to_pickle("allAutomatedFeatures.pkl")
+    # handcraftedFeaturesDF.to_pickle("allHandcraftedFeatures.pkl")
 
-    return handcraftedFeaturesDF, automatedFeaturesDF
+    #return handcraftedFeaturesDF, automatedFeaturesDF
+    return automatedFeaturesDF
 
 #
 # name = 'ARP0007_0901_RCC.img'

@@ -83,14 +83,9 @@ def reduce(featureDF,featureLabel,m,num): #m is number of training examples and 
 
     for i in range(num):
         desiredColumnIndex = featureWeightSortedIndex[i]
-        selectedFeatures[i] = mergedFeat[desiredColumnIndex]
+        selectedFeatures[i] = features[:,desiredColumnIndex]
 
     return  selectedFeatures
-
-
-
-
-
 
 massCenterMarks = pd.read_excel('onlyCC.xlsx')
 massCenterMarks = massCenterMarks.drop(columns=['Unnamed: 0', 'Unnamed: 5', 'Unnamed: 6',
@@ -102,14 +97,16 @@ massType = massCenterMarks['Mass Type']
 handcraftedFeat = pd.read_pickle("allHandcraftedFeatures.pkl")
 automatedFeat   = pd.read_pickle("autoFeat_reduced_preRelief.pkl")
 mergedFeat      = pd.read_pickle("mergedFeat_reduced_preRelief.pkl")
+# automatedFeat   = pd.read_pickle("autoFeatVarianceThresh0.pkl")
+# mergedFeat      = pd.read_pickle("autoFeatVarThresh0Drop20unique.pkl")
 
-handcraftedFeaturesReduced = reduce(handcraftedFeat,massType, 1000, 20 )
+handcraftedFeaturesReduced = reduce(handcraftedFeat,massType, 1000, 41 )
 automatedFeaturesReduced   = reduce(automatedFeat, massType, 1000,1000)
 mergedFeaturesReduced   = reduce(mergedFeat, massType, 1000,1000)
 
-handcraftedFeaturesReduced.to_pickle("handcraftedFeat_postRelief.pkl")
-automatedFeaturesReduced.to_pickle("automatedFeat_postRelief.pkl")
-mergedFeaturesReduced.to_pickle("mergedFeat_postRelief.pkl")
+handcraftedFeaturesReduced.to_pickle("handcraftedFeat_postRelief_41FEATURES.pkl")
+automatedFeaturesReduced.to_pickle("automatedFeat_postRelief_1000FEATURES.pkl")
+mergedFeaturesReduced.to_pickle("mergedFeat_postRelief_1000FEATURES.pkl")
 
 
 x_handcrafted = preprocess.reduceFeatures(handcraftedFeaturesReduced)
@@ -159,7 +156,7 @@ for d in DATA:
     results.loc[len(results)] = AUCscores
     results.loc[len(results)] = ROCAUCScores
 
-results.to_pickle("resultsPostRelief.pkl")
+results.to_pickle("resultsPostRelief_41_1000_1000.pkl")
 #
 # def getResults():
 #     massCenterMarks = pd.read_excel('onlyCC.xlsx')
